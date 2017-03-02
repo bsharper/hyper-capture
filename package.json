@@ -2,11 +2,13 @@
   "name": "hyper-capture",
   "version": "0.1.1",
   "description": "Capture hyper terminal output to video file",
+  "author": "Brian Harper (https://github.com/bsharper)",
+  "license": "MIT",
   "main": "index.js",
   "dependencies": {}, 
   "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Brian Harper <bharper@gmail.com> (https://github.com/bsharper/)"
+  "repository": {
+    "type":"git",
+    "url": "https://github.com/bsharper/hyper-capture.git"
+  }
 }
