@@ -74,7 +74,7 @@ function getSource() {
 
 function getStream(source) {
   return new Promise((resolve, reject) => {
-    navigator.getUserMedia({
+    navigator.mediaDevices.getUserMedia({
       audio: false,
       video: {
         mandatory: {
@@ -86,7 +86,11 @@ function getStream(source) {
           maxHeight: bounds.height
         }
       }
-    }, resolve, reject);
+    }).then(st => {
+        resolve(st);
+    }).catch(err => {
+        reject(err);
+    })
   });
 }
 
