@@ -2,6 +2,8 @@
 
 Capture the output of [hyper](http://hyper.is) to a video file.
 
+**Note: this plugin currently does not work on Windows. The mouse cursor shows up but text does not.**
+
 ## Screencaps
 Quick explaination since these gifs look very similar. The first gif is a desktop capture of the hyper window. The second gif is the result from running `togglecapture`, which how this plugin is used.
 ![Desktop capture](https://github.com/bsharper/hyper-capture/raw/master/screenshots/desktop-capture.gif)
