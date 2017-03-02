@@ -1,0 +1,12 @@
+{
+  "name": "hyper-capture",
+  "version": "0.1.1",
+  "description": "Capture hyper terminal output to video file",
+  "main": "index.js",
+  "dependencies": {}, 
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Brian Harper <bharper@gmail.com> (https://github.com/bsharper/)"
+}
