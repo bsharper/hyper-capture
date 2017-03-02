@@ -27,7 +27,7 @@ function setWindow(w) {
 
 function getDefaultSavePath() {
     var homedir = os.homedir();
-    return path.resolve(homedir, 'Desktop', 'vids');
+    return path.resolve(homedir, 'Desktop');
 }
 
 function getSaveLocation() {
