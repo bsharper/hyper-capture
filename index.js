@@ -9,14 +9,14 @@ exports.decorateConfig = (config) => {
 
 
 exports.onApp = (app) => {
-  // the commented-out code below never works in my tests because it never calls disableHardwareAcceleration before app is ready.  
+  // the commented-out code below never works in my tests, probably because it never calls disableHardwareAcceleration in time.
+  // instead, the relaunch hack / work-around is disabled. This is not terrible but not ideal, since it can increase load times.
   // try {
   //   app.disableHardwareAcceleration();
   // } catch (e) {
   //   console.log(e);
   // }
-  console.log('onApp');
-  console.log('!!!', JSON.stringify(userConfig, null, 4));
+
   if (userConfig && userConfig.gpuFix) {
     if (! process.argv.some(function (el) { return el.toLowerCase() === '--disable-gpu'}) ) {
       console.log('relaunching to disable gpu for capture fix');
@@ -27,10 +27,7 @@ exports.onApp = (app) => {
 }
 
 exports.middleware = (store) => (next) => (action) => {
-  //if (action.type.indexOf('SESSION_') > -1) {
-  // if (action.type === 'SESSION_USER_DATA') {
-  //   console.log(JSON.stringify(action, null, 4));
-  // }
+
   if ('SESSION_ADD_DATA' === action.type) {
     const commandTest = /(togglecapture: command not found)|(command not found: togglecapture|'togglecapture' is not recognized as an internal or external command,(\noperable program or batch file.)?)/m;
     const { data } = action;
@@ -80,16 +77,6 @@ const passProps = (uid, parentProps, props) => {
 
 exports.getTermGroupProps = passProps;
 exports.getTermProps = passProps;
-
-// const getKey = () => app.config.getConfig().toggleRecordingKey || defaultKey
-
-// exports.onApp = () => {
-//   globalShortcut.register(getKey(), toggleRecording)
-// }
-
-// exports.onUnload = () => {
-//   globalShortcut.unregister(getKey())
-// }
 
 exports.decorateTerm = (Term, { React, notify }) => {
   return class extends React.Component {
