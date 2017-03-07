@@ -1,6 +1,6 @@
 {
   "name": "hyper-capture",
-  "version": "0.2.2",
+  "version": "0.3.1",
   "description": "Capture hyper terminal output to video file",
   "author": "Brian Harper (https://github.com/bsharper)",
   "license": "MIT",

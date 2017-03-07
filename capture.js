@@ -10,18 +10,21 @@ var desktopCapturer = electron.desktopCapturer;
 var win; // = remote.getCurrentWindow();
 var bounds; // = win.getBounds();
 
-var webmMimeType = 'video/webm;codecs=h264';
-var videoMimeType = webmMimeType;
+var config = {
+    gpuFix: false,
+    webmMimeType: 'video/webm;codecs=h264',
+    videoMimeType: 'video/webm;codecs=h264',
+    videoBPS: 10000000
+}
 
 var recorder = false;
 var outputFileStream = false;
 var saveDialogOpen = false;
 
-const BPSVIDEO = 10000000;
 
-function setWindow(w) {
-    if (typeof w === 'undefined') w = remote.getCurrentWindow();
-    win = w;
+function setWindow(conf) {
+    config = getCompleteConfig(conf);
+    win = remote.getCurrentWindow();
     bounds = win.getBounds();
 }
 
@@ -46,7 +49,7 @@ function getSaveLocation() {
             if (typeof filename === 'string' && filename.length > 0) {
                 var ext = path.extname(filename).toLowerCase();
                 if (validExts.indexOf(ext) === -1) filename = `${filename}.webm`;
-                if (ext === '.webm') videoMimeType = webmMimeType;
+                //if (ext === '.webm') videoMimeType = config.webmMimeType;
                 saveDialogOpen = false;
                 resolve(filename);
             } else {
@@ -111,8 +114,6 @@ function stopRecording(force) {
     if (typeof force === 'undefined') force = false;
     if (recorder || force) {
         recorder.stop();
-        outputFileStream.end();
-
         recorder = false;
     }    
 }
@@ -122,12 +123,15 @@ function recordToFileStream(filename, stream) {
 
     outputFileStream = fs.createWriteStream(filename);
 
-    recorder = new MediaRecorder(stream, {mimeType: videoMimeType, videoBitsPerSecond: BPSVIDEO, audioBitsPerSecond: 0});
+    recorder = new MediaRecorder(stream, {mimeType: config.videoMimeType, videoBitsPerSecond: config.videoBPS, audioBitsPerSecond: 0});
     recorder.ondataavailable = function (event) {
       var blob = event.data;
       blobToArrayBuffer(event.data).then(arrayBuffer => {
-        outputFileStream.write(new Buffer(arrayBuffer));
+        if (recorder) outputFileStream.write(new Buffer(arrayBuffer));
       });
+    }
+    recorder.onstop = function () {
+        outputFileStream.end();
     }
     recorder.onerror = function (err) {
         try {
@@ -172,8 +176,45 @@ function isRecording() {
     return !!recorder;
 }
 
+var configValidation = {
+    videoMimeType: function (val) {
+        var validMimeTypes = ['video/webm;codecs=h264', 'video/webm;codecs=vp8', 'video/webm;codecs=vp9'];
+        var val = val.toLowerCase().replace(/ /g, '');
+        return validMimeTypes.indexOf(val) > -1;
+    }
+}
+configValidation.webmMimeType = configValidation.videoMimeType;
+
+function getCompleteConfig(conf) {
+    if (typeof conf !== 'object') return getDefaultConfig();
+    var newConfig = getDefaultConfig();
+    if (typeof conf === 'undefined') conf = {};
+    Object.keys(newConfig).forEach(k => {
+        if (Object.keys(conf).indexOf(k) > -1) {
+            if (Object.keys(configValidation).indexOf(k) > -1) {
+                if (configValidation[k](conf[k])) newConfig[k] = conf[k];
+            } else {
+                newConfig[k] = conf[k];
+            }
+            
+        }
+    });
+    return newConfig;
+}
 
 
+function getDefaultConfig() {
+  return {
+    gpuFix: false,
+    webmMimeType: 'video/webm;codecs=h264',
+    videoMimeType: 'video/webm;codecs=h264',
+    videoBPS: 10000000
+  }
+}
+
+
+exports.getCompleteConfig = getCompleteConfig;
+exports.getDefaultConfig = getDefaultConfig;
 exports.setWindow = setWindow;
 exports.isRecording = isRecording;
 exports.timedRecording = timedRecording;
