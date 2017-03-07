@@ -2,7 +2,7 @@
 
 Capture the output of [hyper](http://hyper.is) to a video file.
 
-**Note: this plugin currently does not work on Windows. The mouse cursor shows up but text does not.**
+**Note: if this extension is used on Windows, there is a good chance you'll need to enable the `gpuFix` option to prevent  recordings from being blank (other than the cursor and window decoration). For more information, look under the options section below**
 
 ## Screencaps
 Quick explaination since these gifs look very similar. The first gif is a desktop capture of the hyper window. The second gif is the result from running `togglecapture`, which how this plugin is used.
@@ -16,6 +16,31 @@ Quick explaination since these gifs look very similar. The first gif is a deskto
 ## Usage
 
 Add `hyper-capture` to the `.hyper.js` file and reload hyper. To start capturing terminal activity, type `togglecapture`. A 'save file' dialog will open, pick a file name and location and the capture will begin. To stop the capture, type `togglecapture` again.
+
+## Options
+
+The options are listed below. They go in the `.hyper.js` file.
+
+    {
+        gpuFix: false,
+        webmMimeType: 'video/webm;codecs=h264',
+        videoMimeType: 'video/webm;codecs=h264',
+        videoBPS: 10000000
+    }
+
+### videoMimeType:
+
+Options
+
+* video/webm;codecs=h264 (default)
+* video/webm;codecs=vp8
+* video/webm;codecs=vp9
+
+If you notice issues of the quality of the recordings, consider using vp9. It will require re-encoding to change it to h264, but the quality in general seems better. The next version might use vp9 as the default (especially if ffmpeg is properly integrated to provide seamless post capture conversion).
+
+### gpuFix: (fix for blank recordings on Windows)
+
+If you enable `gpuFix`, hardware acceleration will be disabled. It is important to know that this option will relaunch hyper with the `--disable-gpu` command line argument set if it is not set at launch. If you will be making lots of recordings, consider adding `--disable-gpu` to the launch parameters of hyper to prevent the relaunch. **When this option is enabled, you should enable this extension separately from other extensions. The relaunch could cause issues when other extensions are installing. **
 
 ## What should I do with this `.webm` file?
 
