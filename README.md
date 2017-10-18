@@ -52,7 +52,7 @@ If you enable `gpuFix`, hardware acceleration will be disabled. It is important 
 
 This plugin only uses built in capabilities provided by Electron. As such, the only available format is `webm`. At least that I've found. This plugin saves files as `video/webm;codecs=h264`, which is the h264 variant of the MKV-ish `webm` format. This means no recoding is necessary, it just needs to be put in a different container format.
 
-##Technical information
+## Technical information
 
 This plugin uses:
 
