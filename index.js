@@ -29,7 +29,7 @@ exports.onApp = (app) => {
 exports.middleware = (store) => (next) => (action) => {
 
   if ('SESSION_ADD_DATA' === action.type) {
-    const commandTest = /(togglecapture: command not found)|(command not found: togglecapture|'togglecapture' is not recognized as an internal or external command,(\noperable program or batch file.)?)/m;
+    const commandTest = /(togglecapture: command not found)|(Unknown command 'togglecapture')|(command not found: togglecapture|'togglecapture' is not recognized as an internal or external command,(\noperable program or batch file.)?)/m;
     const { data } = action;
     if (commandTest.test(data)) {
       store.dispatch({
